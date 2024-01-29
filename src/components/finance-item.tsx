@@ -30,6 +30,8 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 
+import { IoTrashOutline } from "react-icons/io5";
+
 function FinanceItem({ item, index }) {
   const categoryItemLib = {
     Outros: <FiDollarSign className="w-8 h-8 text-red-600" />,
@@ -50,7 +52,7 @@ function FinanceItem({ item, index }) {
     Investimentos: <LuLineChart className="w-8 h-8 text-green-600" />,
   };
 
-  const { handleFavorite } = usePayments();
+  const { handleFavorite, deleteTransaction } = usePayments();
 
   return (
     <div
@@ -90,6 +92,12 @@ function FinanceItem({ item, index }) {
             <FormEditTransaction selectedTransaction={item} />
           </DialogContent>
         </Dialog>
+        <button
+          className="cursor-pointer"
+          onClick={() => deleteTransaction(item)}
+        >
+          <IoTrashOutline className="w-4 h-4 text-gray-600 dark:text-gray-100 transition-all duration-400 ease-in-out hover:text-red-600 dark:hover:text-redd-300" />
+        </button>
       </div>
       {item.isEnabled ? (
         item.category ? (
