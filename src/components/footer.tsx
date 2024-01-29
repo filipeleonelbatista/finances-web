@@ -1,6 +1,7 @@
 function Footer() {
   return (
     <footer className="bottom-0 p-4 flex flex-col items-center">
+      <p className="text-muted-foreground">Ver.: 1.0.8</p>
       <a
         href="https://play.google.com/store/apps/details?id=com.finances"
         className="text-purple-600 font-semibold"
