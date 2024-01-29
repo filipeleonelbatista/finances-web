@@ -1,3 +1,4 @@
+import { usePayments } from "@/hooks/usePayments";
 import {
   FiArrowDownCircle,
   FiArrowUpCircle,
@@ -49,18 +50,22 @@ function FinanceItem({ item, index }) {
     Investimentos: <LuLineChart className="w-8 h-8 text-green-600" />,
   };
 
+  const { handleFavorite } = usePayments();
+
   return (
     <div
       key={index}
       className="relative px-4 py-3 flex flex-row gap-4 rounded items-center bg-white dark:bg-gray-800 drop-shadow-lg"
     >
       <div className="flex flex-row gap-2 absolute top-2 right-4">
-        <p
-          data-paymentstatus={item.paymentStatus}
-          className="px-4 py-0.5 data-[paymentstatus=false]:border-red-600 data-[paymentstatus=true]:border-green-600 data-[paymentstatus=false]:text-red-600 data-[paymentstatus=true]:text-green-600 font-semibold border-[1px] rounded-full text-xs"
-        >
-          {item.paymentStatus ? "Pago" : "Não Pago"}
-        </p>
+        {item.isEnabled && (
+          <p
+            data-paymentstatus={item.paymentStatus}
+            className="px-4 py-0.5 data-[paymentstatus=false]:border-red-600 data-[paymentstatus=true]:border-green-600 data-[paymentstatus=false]:text-red-600 data-[paymentstatus=true]:text-green-600 font-semibold border-[1px] rounded-full text-xs"
+          >
+            {item.paymentStatus ? "Pago" : "Não Pago"}
+          </p>
+        )}
         <button className="cursor-pointer" onClick={() => handleFavorite(item)}>
           {item.isFavorited ? (
             <IoIosStar className="w-4 h-4 text-yellow-600 dark:text-yellow-300 transition-all duration-400 ease-in-out hover:text-yellow-900" />
@@ -113,7 +118,7 @@ function FinanceItem({ item, index }) {
             {item.category}
           </p>
         </div>
-        <p>
+        <p className="font-semibold">
           {item.isEnabled ? "-" : ""}
           {item.amount.toLocaleString("pt-BR", {
             style: "currency",

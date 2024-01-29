@@ -44,12 +44,12 @@ function Financas() {
     setSelectedTransaction,
     filteredList,
     listTotal,
+    transactionsList,
     selectedtypeofpayment,
     setselectedtypeofpayment,
     pamentStatusLabel,
     selectedPaymentStatus,
     setSelectedPaymentStatus,
-    handleFavorite,
     selectedFavoritedFilter,
     setSelectedFavoritedFilter,
     favoritedFilterLabel,
@@ -245,7 +245,7 @@ function Financas() {
         </div>
       </div>
 
-      {filteredList.length > 0 ? (
+      {transactionsList.length > 0 ? (
         <div className="w-full max-w-[800px] flex flex-col gap-3 px-2 py-4">
           <Label>Pesquisar por nome</Label>
           <div className="flex w-full items-center space-x-2">
@@ -265,7 +265,7 @@ function Financas() {
         <>
           <div className="w-full max-w-[800px] flex flex-col gap-3 px-2 py-4">
             {filteredList.map((item, index) => (
-              <FinanceItem item={item} index={index} />
+              <FinanceItem item={item} index={index} key={index} />
             ))}
           </div>
 
@@ -274,7 +274,7 @@ function Financas() {
               Total
             </h2>
             <h2 className="font-semibold dark:text-white text-gray-800 text-xl">
-              R$ 0,00
+              {formatCurrency(listTotal)}
             </h2>
           </div>
         </>

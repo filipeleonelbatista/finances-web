@@ -242,7 +242,7 @@ function FormEditTransaction({ selectedTransaction }) {
         }}
         className="bg-red-600 hover:bg-red-900"
       >
-        <IoTrashOutline className="text-white w-4 h-4 mr-2" />
+        <IoTrashOutline className="w-4 h-4 mr-2" />
         Excluir
       </Button>
     </div>

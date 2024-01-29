@@ -282,6 +282,62 @@ export function PaymentsContextProvider(props) {
   }
 
   async function importTransactions(importedList) {
+    const convertedList = importedList.map((item) => {
+      const convertedItem = { ...item };
+
+      // Convertendo 'date' para Date
+      if (convertedItem.date && typeof convertedItem.date === "string") {
+        convertedItem.date = new Date(parseInt(convertedItem.date, 10));
+      }
+
+      // Convertendo 'paymentDate' para Date
+      if (
+        convertedItem.paymentDate &&
+        typeof convertedItem.paymentDate === "string"
+      ) {
+        convertedItem.paymentDate = new Date(
+          parseInt(convertedItem.paymentDate, 10)
+        );
+      }
+
+      // Convertendo 'isEnabled' para boolean
+      if (
+        convertedItem.isEnabled &&
+        typeof convertedItem.isEnabled === "string"
+      ) {
+        convertedItem.isEnabled = convertedItem.isEnabled === "1";
+      }
+
+      // Convertendo 'isFavorited' para boolean
+      if (
+        convertedItem.isFavorited &&
+        typeof convertedItem.isFavorited === "string"
+      ) {
+        convertedItem.isFavorited = convertedItem.isFavorited === "1";
+      }
+
+      // Convertendo 'paymentStatus' para boolean
+      if (
+        convertedItem.paymentStatus &&
+        typeof convertedItem.paymentStatus === "string"
+      ) {
+        convertedItem.paymentStatus = convertedItem.paymentStatus === "1";
+      }
+
+      // Convertendo 'amount' para boolean
+      if (convertedItem.amount && typeof convertedItem.amount === "string") {
+        convertedItem.amount = parseFloat(convertedItem.amount);
+      }
+
+      return convertedItem;
+    });
+
+    localStorage.setItem(
+      "finances",
+      JSON.stringify([...convertedList, ...transactionsList])
+    );
+
+    alert("Importação concluida com sucesso!");
     loadTransactions();
   }
 

@@ -1,3 +1,10 @@
+import { usePayments } from "@/hooks/usePayments";
+import Papa from "papaparse";
+import { BsFiletypeCsv } from "react-icons/bs";
+import { FaCog } from "react-icons/fa";
+import { FiHome } from "react-icons/fi";
+import { LuLineChart } from "react-icons/lu";
+import { RxHamburgerMenu } from "react-icons/rx";
 import { ModeToggle } from "./mode-toggle";
 import { Button } from "./ui/button";
 import {
@@ -10,13 +17,66 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { RxHamburgerMenu } from "react-icons/rx";
-import { FiHome } from "react-icons/fi";
-import { BsFiletypeCsv } from "react-icons/bs";
-import { FaCog } from "react-icons/fa";
-import { LuLineChart } from "react-icons/lu";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 
 function Header() {
+  const { importTransactions } = usePayments();
+
+  const handleArquivoChange = async (event) => {
+    const arquivoSelecionado = event.target.files[0];
+
+    if (arquivoSelecionado && arquivoSelecionado.name.endsWith(".csv")) {
+      const reader = new FileReader();
+
+      reader.onload = async (e) => {
+        const csvContent = e.target.result;
+
+        try {
+          Papa.parse(csvContent, {
+            header: true,
+            skipEmptyLines: true,
+            complete: (result) => {
+              const records = result.data;
+
+              const requiredCampos = [
+                "id",
+                "_status",
+                "_changed",
+                "description",
+                "amount",
+                "category",
+                "date",
+                "paymentDate",
+                "paymentStatus",
+                "isEnabled",
+                "isFavorited",
+              ];
+
+              const isValidCSV = records.every((record) =>
+                requiredCampos.every((campo) => campo in record)
+              );
+
+              if (isValidCSV) {
+                importTransactions(records);
+              } else {
+                alert(
+                  "O arquivo CSV está mal formatado. Verifique se todos os campos necessários estão presentes."
+                );
+              }
+            },
+          });
+        } catch (error) {
+          console.error("Erro ao analisar o arquivo CSV:", error);
+        }
+      };
+
+      reader.readAsText(arquivoSelecionado);
+    } else {
+      alert("Por favor, selecione um arquivo CSV.");
+    }
+  };
+
   return (
     <div className="w-full min-h-48 flex flex-col bg-purple-600 p-8 items-center">
       <header className="w-full px-2 flex flex-row justify-between max-w-[800px]">
@@ -45,7 +105,9 @@ function Header() {
                     <FiHome />
                   </DropdownMenuShortcut>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => document.getElementById("csv")?.click()}
+                >
                   Importar dados
                   <DropdownMenuShortcut>
                     <BsFiletypeCsv />
@@ -69,6 +131,19 @@ function Header() {
           </DropdownMenu>
         </div>
       </header>
+      <div className="sr-only">
+        <div className="grid w-full max-w-sm items-center gap-1.5">
+          <Label htmlFor="csv">csv</Label>
+          <Input
+            hidden
+            id="csv"
+            type="file"
+            accept=".csv"
+            value=""
+            onChange={(event) => handleArquivoChange(event)}
+          />
+        </div>
+      </div>
     </div>
   );
 }
