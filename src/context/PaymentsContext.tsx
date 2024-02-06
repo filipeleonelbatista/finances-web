@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { v4 as uuidv4 } from "uuid";
+import { useToast } from "@/components/ui/use-toast";
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
@@ -17,6 +18,8 @@ dayjs.extend(isSameOrBefore);
 export const PaymentsContext = createContext({});
 
 export function PaymentsContextProvider(props) {
+  const { toast } = useToast()
+
   const [transactionsList, setTransactionsList] = useState([]);
   const [selectedPaymentStatus, setSelectedPaymentStatus] = useState("Todos");
   const [selectedDateOrderFilter, setSelectedDateOrderFilter] =
@@ -249,7 +252,10 @@ export function PaymentsContextProvider(props) {
         JSON.stringify([transactionToUpdate, ...currentTransactions])
       );
     }
-
+    toast({
+      description: transactionToUpdate.isFavorited ? "Item favoritado" : "Item desfavoritado",
+      variant: "success"
+    })
     loadTransactions();
   }
 
@@ -262,7 +268,10 @@ export function PaymentsContextProvider(props) {
       "finances",
       JSON.stringify([currentTransaction, ...currentTransactions])
     );
-
+    toast({
+      description: "Item atualizado com sucesso!",
+      variant: "success"
+    })
     loadTransactions();
   }
 
@@ -278,6 +287,10 @@ export function PaymentsContextProvider(props) {
       );
     }
 
+    toast({
+      description: "Item excluido com sucesso!",
+      variant: "success"
+    })
     loadTransactions();
   }
 
@@ -337,7 +350,10 @@ export function PaymentsContextProvider(props) {
       JSON.stringify([...convertedList, ...transactionsList])
     );
 
-    alert("Importação concluida com sucesso!");
+    toast({
+      description: "Importação conclúida com sucesso!",
+      variant: "success"
+    })
     loadTransactions();
   }
 
@@ -348,6 +364,12 @@ export function PaymentsContextProvider(props) {
       "finances",
       JSON.stringify([newTransaction, ...transactionsList])
     );
+
+    toast({
+      description: "Item adicionado com sucesso!",
+      variant: "success"
+    })
+
     loadTransactions();
   }
 

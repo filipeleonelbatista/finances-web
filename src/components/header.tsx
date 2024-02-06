@@ -19,9 +19,38 @@ import {
 } from "./ui/dropdown-menu";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import { useToast } from "./ui/use-toast";
 
 function Header() {
-  const { importTransactions } = usePayments();
+  const { toast } = useToast()
+  const { importTransactions, transactionsList } = usePayments();
+
+  const handleCsvExport = () => {
+    const headers = Object.keys(transactionsList[0]);
+    const csvContent = [
+      headers.join(','),
+      ...transactionsList.map(obj => `${obj.id},${obj._status ?? ""},${obj._created ?? ""},${obj.description},${obj.amount},${obj.category},${new Date(obj.date).getTime()},${obj.paymentDate === "" ? obj.paymentDate : new Date(obj.paymentDate).getTime()},${obj.paymentStatus ? "1" : "0"},${obj.isEnabled ? "1" : "0"},${obj.isFavorited ? "1" : "0"}`)
+    ].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+    toast({
+      description: "Exportação feita com sucesso!",
+      variant: "success"
+    })
+    
+    const link = document.createElement('a');
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `financas-${Date.now()}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    
+  }
 
   const handleArquivoChange = async (event) => {
     const arquivoSelecionado = event.target.files[0];
@@ -60,20 +89,33 @@ function Header() {
               if (isValidCSV) {
                 importTransactions(records);
               } else {
-                alert(
-                  "O arquivo CSV está mal formatado. Verifique se todos os campos necessários estão presentes."
-                );
+                toast({
+                  description: "O arquivo CSV está mal formatado. Verifique se todos os campos necessários estão presentes.",
+                  variant: "destructive"
+                })
               }
             },
           });
         } catch (error) {
+          toast({
+            description: "Erro ao analisar o arquivo CSV!",
+            variant: "destructive"
+          })
           console.error("Erro ao analisar o arquivo CSV:", error);
         }
       };
 
       reader.readAsText(arquivoSelecionado);
+
+      toast({
+        description: "Arquivo importado com sucesso!",
+        variant: "destructive"
+      })
     } else {
-      alert("Por favor, selecione um arquivo CSV.");
+      toast({
+        description: "Por favor, selecione um arquivo CSV.",
+        variant: "destructive"
+      })
     }
   };
 
@@ -99,21 +141,27 @@ function Header() {
               <DropdownMenuGroup>
                 <DropdownMenuLabel>Finança$</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                {/* <DropdownMenuItem>
                   Finanças
                   <DropdownMenuShortcut>
                     <FiHome />
                   </DropdownMenuShortcut>
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
                 <DropdownMenuItem
                   onClick={() => document.getElementById("csv")?.click()}
                 >
-                  Importar dados
+                  Importar Finanças
                   <DropdownMenuShortcut>
                     <BsFiletypeCsv />
                   </DropdownMenuShortcut>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={handleCsvExport}>
+                  Exportar Finanças
+                  <DropdownMenuShortcut>
+                    <BsFiletypeCsv />
+                  </DropdownMenuShortcut>
+                </DropdownMenuItem>
+                {/* <DropdownMenuItem>
                   Relatórios
                   <DropdownMenuShortcut>
                     <LuLineChart />
@@ -125,7 +173,7 @@ function Header() {
                   <DropdownMenuShortcut>
                     <FaCog />
                   </DropdownMenuShortcut>
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>

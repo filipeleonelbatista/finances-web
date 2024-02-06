@@ -33,6 +33,7 @@ import {
 import { IoTrashOutline } from "react-icons/io5";
 
 function FinanceItem({ item, index }) {
+
   const categoryItemLib = {
     Outros: <FiDollarSign className="w-8 h-8 text-red-600" />,
     Moradia: <FiHome className="w-8 h-8 text-red-600" />,
@@ -40,7 +41,7 @@ function FinanceItem({ item, index }) {
     Streaming: <SiNetflix className="w-8 h-8 text-red-600" />,
     Estudos: <IoSchoolOutline className="w-8 h-8 text-red-600" />,
     Beleza: <GiLipstick className="w-8 h-8 text-red-600" />,
-    Emprestimos: <RiAlarmWarningLine className="w-8 h-8 text-red-600" />,
+    Empréstimos: <RiAlarmWarningLine className="w-8 h-8 text-red-600" />,
     Emergência: <RiAlarmWarningLine className="w-8 h-8 text-red-600" />,
     Mercado: <FiShoppingCart className="w-8 h-8 text-red-600" />,
     "TV/Internet/Telefone": <FiAtSign className="w-8 h-8 text-red-600" />,
@@ -68,12 +69,11 @@ function FinanceItem({ item, index }) {
             {item.paymentStatus ? "Pago" : "Não Pago"}
           </p>
         )}
-        <button className="cursor-pointer" onClick={() => handleFavorite(item)}>
-          {item.isFavorited ? (
-            <IoIosStar className="w-4 h-4 text-yellow-600 dark:text-yellow-300 transition-all duration-400 ease-in-out hover:text-yellow-900" />
-          ) : (
-            <IoIosStarOutline className="w-4 h-4 text-gray-600 dark:text-gray-100 transition-all duration-400 ease-in-out hover:text-gray-900" />
-          )}
+        <button
+          className="cursor-pointer"
+          onClick={() => deleteTransaction(item)}
+        >
+          <IoTrashOutline className="w-4 h-4 text-gray-600 dark:text-gray-100 transition-all duration-400 ease-in-out hover:text-red-600 dark:hover:text-redd-300" />
         </button>
         <Dialog>
           <DialogTrigger
@@ -92,11 +92,12 @@ function FinanceItem({ item, index }) {
             <FormEditTransaction selectedTransaction={item} />
           </DialogContent>
         </Dialog>
-        <button
-          className="cursor-pointer"
-          onClick={() => deleteTransaction(item)}
-        >
-          <IoTrashOutline className="w-4 h-4 text-gray-600 dark:text-gray-100 transition-all duration-400 ease-in-out hover:text-red-600 dark:hover:text-redd-300" />
+        <button className="cursor-pointer" onClick={() => handleFavorite(item)}>
+          {item.isFavorited ? (
+            <IoIosStar className="w-4 h-4 text-yellow-600 dark:text-yellow-300 transition-all duration-400 ease-in-out hover:text-yellow-900" />
+          ) : (
+            <IoIosStarOutline className="w-4 h-4 text-gray-600 dark:text-gray-100 transition-all duration-400 ease-in-out hover:text-gray-900" />
+          )}
         </button>
       </div>
       {item.isEnabled ? (

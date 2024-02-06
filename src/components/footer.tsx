@@ -1,23 +1,30 @@
+import Ad from "./ad";
+
 function Footer() {
   return (
-    <footer className="bottom-0 p-4 flex flex-col items-center">
-      <p className="text-muted-foreground">Ver.: 1.0.8</p>
-      <a
-        href="https://play.google.com/store/apps/details?id=com.finances"
-        className="text-purple-600 font-semibold"
-      >
-        Finanças - Controle seus gastos (Baixe o app Android)
-      </a>
-      <p>
-        Desenvolvido com ❤️ por{" "}
+    <>
+      <div className="w-full max-w-[800px] px-2 flex flex-col gap-4 mb-4">
+        <Ad />
+      </div>
+      <footer className="bottom-0 p-4 flex flex-col items-center space-y-1">
+        <p className="text-muted-foreground text-xs">Ver.: 1.1.2</p>
         <a
+          href="https://play.google.com/store/apps/details?id=com.finances"
           className="text-purple-600 font-semibold"
-          href="https://filipeleonelbatista.vercel.app"
         >
-          Filipe Batista
+          Finanças - Controle seus gastos (Baixe o app Android)
         </a>
-      </p>
-    </footer>
+        <p>
+          Desenvolvido com ❤️ por{" "}
+          <a
+            className="text-purple-600 font-semibold"
+            href="https://filipeleonelbatista.vercel.app"
+          >
+            Filipe Batista
+          </a>
+        </p>
+      </footer>
+    </>
   );
 }
 

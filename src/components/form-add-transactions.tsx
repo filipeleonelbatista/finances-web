@@ -80,8 +80,15 @@ function FormAddTransaction() {
   const toggleSwitch = () =>
     formik.setFieldValue("isEnabled", !formik.values.isEnabled);
 
-  const toggleSwitchPaymentStatus = () =>
+  const toggleSwitchPaymentStatus = () => {
+    if (!formik.values.paymentStatus) {
+      formik.setFieldValue("paymentDate", new Date());
+    } else {
+      formik.setFieldValue("paymentDate", "");
+    }
     formik.setFieldValue("paymentStatus", !formik.values.paymentStatus);
+
+  }
 
   const onChange = (selectedDate) => {
     formik.setFieldValue("date", selectedDate);

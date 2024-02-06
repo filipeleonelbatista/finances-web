@@ -31,6 +31,8 @@ import {
   SelectValue,
 } from "./components/ui/select";
 import { usePayments } from "./hooks/usePayments";
+import AiTips from "./components/ai-tips";
+import Ad from "./components/ad";
 
 function Financas() {
   const [showFilter, setShowFilter] = useState(false);
@@ -119,6 +121,11 @@ function Financas() {
       </div>
       <div className="w-full max-w-[800px] px-2 flex mb-4">
         <p>* Totais apenas dos itens do período selecionado</p>
+      </div>
+
+      <div className="w-full max-w-[800px] px-2 flex flex-col gap-4 mb-4">
+        <Ad />
+        <AiTips />
       </div>
 
       <div className="w-full max-w-[800px] px-2 flex flex-row justify-between items-center gap-4 mb-4">
