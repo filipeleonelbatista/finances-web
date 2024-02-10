@@ -1,9 +1,7 @@
 import { usePayments } from "@/hooks/usePayments";
 import Papa from "papaparse";
 import { BsFiletypeCsv } from "react-icons/bs";
-import { FaCog } from "react-icons/fa";
 import { FiHome } from "react-icons/fi";
-import { LuLineChart } from "react-icons/lu";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { ModeToggle } from "./mode-toggle";
 import { Button } from "./ui/button";
@@ -20,8 +18,16 @@ import {
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { useToast } from "./ui/use-toast";
+import { useNavigate } from "react-router-dom";
+import { LuLineChart } from "react-icons/lu";
+import { FaCog } from 'react-icons/fa';
 
-function Header() {
+interface HeaderProps {
+  title: string;
+}
+
+function Header({ title = "" }: HeaderProps) {
+  const navigate = useNavigate();
   const { toast } = useToast()
   const { importTransactions, transactionsList } = usePayments();
 
@@ -37,7 +43,7 @@ function Header() {
       description: "Exportação feita com sucesso!",
       variant: "success"
     })
-    
+
     const link = document.createElement('a');
     if (link.download !== undefined) {
       const url = URL.createObjectURL(blob);
@@ -49,7 +55,7 @@ function Header() {
       document.body.removeChild(link);
     }
 
-    
+
   }
 
   const handleArquivoChange = async (event) => {
@@ -123,7 +129,7 @@ function Header() {
     <div className="w-full min-h-48 flex flex-col bg-purple-600 p-8 items-center">
       <header className="w-full px-2 flex flex-row justify-between max-w-[800px]">
         <h2 className="font-bold text-white text-2xl">
-          Finança<span className="text-purple-900">$</span>
+          {title}<span className="text-purple-900">$</span>
         </h2>
 
         <div className="flex flex-row gap-2">
@@ -141,12 +147,12 @@ function Header() {
               <DropdownMenuGroup>
                 <DropdownMenuLabel>Finança$</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {/* <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/")}>
                   Finanças
                   <DropdownMenuShortcut>
                     <FiHome />
                   </DropdownMenuShortcut>
-                </DropdownMenuItem> */}
+                </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => document.getElementById("csv")?.click()}
                 >
@@ -161,14 +167,14 @@ function Header() {
                     <BsFiletypeCsv />
                   </DropdownMenuShortcut>
                 </DropdownMenuItem>
-                {/* <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/reports")}>
                   Relatórios
                   <DropdownMenuShortcut>
                     <LuLineChart />
                   </DropdownMenuShortcut>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                {/* <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate("/settings")}>
                   Configurações
                   <DropdownMenuShortcut>
                     <FaCog />

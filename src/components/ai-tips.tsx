@@ -126,7 +126,7 @@ function AiTips() {
       <button className="absolute top-4 right-4" onClick={() => setIsShow(false)}>
         <IoCloseCircleOutline className="w-8 h-8" />
       </button>
-      <div className="flex gap-2 items-center">
+      <div className="flex gap-2 items-center" style={{ margin: "0px !important" }}>
         <Avatar className="w-8 h-8">
           <AvatarFallback>
             <TbRobotFace className="w-4 h-4" />
