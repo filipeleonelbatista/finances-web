@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Financas from "./Financas";
 import Reports from "./Reports";
 import Settings from "./Settings";
-import Stock from "./stock";
+import Stock from "./Stock";
 
 export default function App() {
   return (
