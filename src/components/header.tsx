@@ -21,12 +21,14 @@ import { useToast } from "./ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import { LuLineChart } from "react-icons/lu";
 import { FaCog } from 'react-icons/fa';
+import { GiShoppingCart } from "react-icons/gi";
 
 interface HeaderProps {
   title: string;
+  isShort?: boolean;
 }
 
-function Header({ title = "" }: HeaderProps) {
+function Header({ title = "", isShort }: HeaderProps) {
   const navigate = useNavigate();
   const { toast } = useToast()
   const { importTransactions, transactionsList } = usePayments();
@@ -126,7 +128,7 @@ function Header({ title = "" }: HeaderProps) {
   };
 
   return (
-    <div className="w-full min-h-48 flex flex-col bg-purple-600 p-8 items-center">
+    <div data-isshort={isShort} className="w-full min-h-48 data-[isshort=true]:min-h-24 flex flex-col bg-purple-600 p-8 items-center">
       <header className="w-full px-2 flex flex-row justify-between max-w-[800px]">
         <h2 className="font-bold text-white text-2xl">
           {title}<span className="text-purple-900">$</span>
@@ -173,13 +175,19 @@ function Header({ title = "" }: HeaderProps) {
                     <LuLineChart />
                   </DropdownMenuShortcut>
                 </DropdownMenuItem>
-                {/* <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate("/stock")}>
+                  Estoque
+                  <DropdownMenuShortcut>
+                    <GiShoppingCart />
+                  </DropdownMenuShortcut>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => navigate("/settings")}>
                   Configurações
                   <DropdownMenuShortcut>
                     <FaCog />
                   </DropdownMenuShortcut>
-                </DropdownMenuItem> */}
+                </DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
