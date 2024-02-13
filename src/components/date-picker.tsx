@@ -1,7 +1,5 @@
 "use client";
 
-import { Calendar as CalendarIcon } from "lucide-react";
-import dayjs from "dayjs";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -10,6 +8,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import dayjs from "dayjs";
+import { Calendar as CalendarIcon } from "lucide-react";
 import { Label } from "./ui/label";
 
 export function DatePicker({ id, label, date, setDate }) {
