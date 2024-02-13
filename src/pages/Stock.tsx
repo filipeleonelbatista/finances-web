@@ -3,13 +3,13 @@ import { CiFilter } from "react-icons/ci";
 import {
   FiPlus
 } from "react-icons/fi";
-import Ad from "./components/ad";
-import EmptyMessage from "./components/empty-message";
-import Footer from "./components/footer";
-import FormAddStockItem from "./components/form-add-stock-item";
-import Header from "./components/header";
-import StockItem from "./components/stock-item";
-import { Button } from "./components/ui/button";
+import Ad from "../components/ad";
+import EmptyMessage from "../components/empty-message";
+import Footer from "../components/footer";
+import FormAddStockItem from "../components/form-add-stock-item";
+import Header from "../components/header";
+import StockItem from "../components/stock-item";
+import { Button } from "../components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -17,11 +17,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./components/ui/dialog";
-import { Input } from "./components/ui/input";
-import { Label } from "./components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./components/ui/select";
-import { useStock } from "./hooks/useStock";
+} from "../components/ui/dialog";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
+import { useStock } from "../hooks/useStock";
 
 function Stock() {
   const [showFilter, setShowFilter] = useState(false);

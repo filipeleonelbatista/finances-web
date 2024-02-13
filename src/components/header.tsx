@@ -182,6 +182,13 @@ function Header({ title = "", isShort }: HeaderProps) {
                   </DropdownMenuShortcut>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate("/investiments")}>
+                  Simule investimentos
+                  <DropdownMenuShortcut>
+                    <LuLineChart />
+                  </DropdownMenuShortcut>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => navigate("/settings")}>
                   Configurações
                   <DropdownMenuShortcut>

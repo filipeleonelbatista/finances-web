@@ -1,8 +1,9 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Financas from "./Financas";
-import Reports from "./Reports";
-import Settings from "./Settings";
-import Stock from "./Stock";
+import Financas from "./pages/Financas";
+import Reports from "./pages/Reports";
+import Settings from "./pages/Settings";
+import Stock from "./pages/Stock";
+import Simulador from "./pages/Simulador";
 
 export default function App() {
   return (
@@ -12,7 +13,8 @@ export default function App() {
         <Route path="/reports" element={<Reports />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/stock" element={<Stock />} />
-        
+        <Route path="/investiments" element={<Simulador />} />
+
         {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
     </BrowserRouter>

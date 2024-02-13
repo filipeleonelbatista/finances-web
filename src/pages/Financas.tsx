@@ -1,39 +1,52 @@
-import { useMemo, useState } from "react";
-import Chart from "react-apexcharts";
+import { useState } from "react";
 import { CiFilter } from "react-icons/ci";
 import {
   FiArrowDownCircle,
   FiArrowUpCircle,
-  FiDollarSign, FiPlus
+  FiDollarSign,
+  FiPlus,
 } from "react-icons/fi";
-import AiTips from "./components/ai-tips";
-import { DatePicker } from "./components/date-picker";
-import EmptyMessage from "./components/empty-message";
-import FinanceItem from "./components/finance-item";
-import Footer from "./components/footer";
-import FormAddTransaction from "./components/form-add-transactions";
-import Header from "./components/header";
-import { Button } from "./components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./components/ui/dialog";
+import { DatePicker } from "../components/date-picker";
+import EmptyMessage from "../components/empty-message";
+import FinanceItem from "../components/finance-item";
+import Footer from "../components/footer";
+import FormAddTransaction from "../components/form-add-transactions";
+import Header from "../components/header";
+import { Button } from "../components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../components/ui/dialog";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./components/ui/select";
-import { usePayments } from "./hooks/usePayments";
-import { useTheme } from "./components/theme-provider";
+} from "../components/ui/select";
+import { usePayments } from "../hooks/usePayments";
+import AiTips from "../components/ai-tips";
+import Ad from "../components/ad";
 
-function Reports() {
-  const { theme } = useTheme();
+function Financas() {
   const [showFilter, setShowFilter] = useState(false);
 
   const {
     Incomings,
     Expenses,
     Total,
+    TotalList,
+    selectedTransaction,
+    setSelectedTransaction,
     filteredList,
+    listTotal,
+    transactionsList,
     selectedtypeofpayment,
     setselectedtypeofpayment,
     pamentStatusLabel,
@@ -45,37 +58,13 @@ function Reports() {
     categoriesList,
     selectedPaymentCategory,
     setSelectedPaymentCategory,
+    search,
+    setSearch,
     startDate,
     setStartDate,
     endDate,
     setEndDate,
   } = usePayments();
-
-  const expensesByCategory = useMemo(() => {
-    const gastosHabilitados = filteredList.filter(item => item.isEnabled);
-    // Extrair categorias únicas
-    const categoriasUnicas = [...new Set(gastosHabilitados.map(item => item.category))];
-
-    // Calcular somatório dos gastos de cada categoria
-    const gastosPorCategoria = categoriasUnicas.map(categoria => {
-      return gastosHabilitados
-        .filter(item => item.category === categoria)
-        .reduce((acc, cur) => acc + cur.amount, 0);
-    });
-
-    const totalGastos = gastosPorCategoria.reduce((acc, cur) => acc + cur, 0);
-
-    const percentuais = gastosPorCategoria.map(gasto => (gasto / totalGastos) * 100);
-
-    return { label: categoriasUnicas, value: gastosPorCategoria, percentage: percentuais };
-  }, [filteredList]);
-
-  const filteredAndSortedData = useMemo(() => {
-    const enabledData = filteredList.filter(item => item.isEnabled);
-
-    const sortedData = enabledData.sort((a, b) => b.amount - a.amount).slice(0, 5);
-    return sortedData;
-  }, [filteredList]);
 
   const formatCurrency = (value) => {
     return value.toLocaleString("pt-BR", {
@@ -97,7 +86,8 @@ function Reports() {
 
   return (
     <div className="w-full h-full flex flex-col bg-gray-100 dark:bg-gray-900 items-center">
-      <Header title="Relatorio" />
+      <Header title="Financa" />
+
       <div className="w-full max-w-[800px] px-2 grid sm:grid-rows-3 sm:grid-cols-none md:grid-rows-none md:grid-cols-3 gap-4 mt-[-64px] mb-2">
         <div className="px-4 py-3 flex flex-col rounded bg-white dark:bg-gray-800 drop-shadow-lg">
           <div className="w-full flex flex-row items-center justify-between">
@@ -133,9 +123,14 @@ function Reports() {
         <p>* Totais apenas dos itens do período selecionado</p>
       </div>
 
+      <div className="w-full max-w-[800px] px-2 flex flex-col gap-4 mb-4">
+        <Ad />
+        <AiTips />
+      </div>
+
       <div className="w-full max-w-[800px] px-2 flex flex-row justify-between items-center gap-4 mb-4">
         <h2 className="font-bold dark:text-white text-gray-800 text-xl">
-          Filtros do relatório
+          Extrato
         </h2>
         <Button
           className="border-purple-600 text-purple-600 bg-transparent hover:border-purple-900 hover:text-purple-900"
@@ -257,112 +252,41 @@ function Reports() {
         </div>
       </div>
 
-      <div className="w-full max-w-[800px] px-2 flex flex-col gap-4 mb-4">
-        <AiTips />
-      </div>
-
-      <div className="w-full max-w-[800px] px-2 flex flex-col justify-between items-center gap-4 mb-4">
-        <div className="w-full flex flex-col md:flex-row gap-2 md:gap-4">
-          <div className="w-full flex flex-col gap-2 md:gap-4">
-            <div className="w-full px-4 py-3 gap-2 md:gap-4 flex flex-col">
-              <h3 className="text-lg font-semibold">Gastos por categoria</h3>
-              <Chart
-                type="pie"
-                options={
-                  {
-                    chart: {
-                      width: '100%',
-                      type: 'pie',
-                    },
-                    labels: expensesByCategory.label,
-                    theme: {
-                      monochrome: {
-                        color: "#9333ea",
-                        enabled: true
-                      }
-                    },
-                    plotOptions: {
-                      pie: {
-                        dataLabels: {
-                          offset: -5
-                        }
-                      }
-                    },
-                    dataLabels: {
-                      formatter(val: number, opts?: any) {
-                        const name = opts.w.globals.labels[opts.seriesIndex]
-                        return [name, formatCurrency(expensesByCategory.value[opts.seriesIndex] ?? 0), val.toFixed(1) + '%']
-                      }
-                    },
-                    legend: {
-                      show: false
-                    },
-                    stroke: {
-                      show: false
-                    },
-                    tooltip: {
-                      marker: {
-                        show: false,
-                      },
-                      enabled: true,
-                      y: {
-                        formatter: () => "",
-                        title: {
-                          formatter(val: number, opts?: any) {
-                            const name = opts.w.globals.labels[opts.seriesIndex]
-                            return `${name + " - " + formatCurrency(expensesByCategory.value[opts.seriesIndex] ?? 0)}`
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-                series={expensesByCategory.percentage} />
-            </div>
-            <div className="w-full px-4 py-3 flex flex-col rounded bg-white dark:bg-gray-800 drop-shadow-lg">
-              <h3 className="text-lg font-semibold">Saúde Financeira</h3>
-              <div className="w-full space-y-2 flex flex-row items-center justify-between">
-                <div className="space-x-2 flex flex-row items-center">
-                  <FiArrowUpCircle className="w-10 h-10 text-green-500" />
-                  <div>
-                    <p className="text-sm">Ganhos</p>
-                    <p className="font-semibold">{formatCurrency(Incomings ? Incomings : 0)}</p>
-                  </div>
-                </div>
-                <div className="space-x-2 flex flex-row items-center">
-                  <div>
-                    <p className="text-sm">Despesas</p>
-                    <p className="font-semibold">{formatCurrency(Expenses ? Expenses : 0)}</p>
-                  </div>
-                  <FiArrowDownCircle className="w-10 h-10 text-red-500" />
-                </div>
-              </div>
-              <div className="w-full bg-red-500 rounded-full h-2.5 my-2">
-                <div className="bg-purple-600 h-2.5 rounded-full" style={{
-                  width: `${(Incomings * 100) / (Incomings + Expenses) >= 100
-                    ? 100
-                    : (Incomings * 100) / (Incomings + Expenses)
-                    }%`
-                }}></div>
-              </div>
-            </div>
-          </div>
-
-          <div className="w-full py-3 flex flex-col">
-            <h3 className="ml-2 text-lg font-semibold">Maiores gastos</h3>
-            {filteredAndSortedData.length === 0 ? (
-              <EmptyMessage />
-            ) : (
-              <div className="w-full max-w-[800px] flex flex-col gap-3 px-2 py-4">
-                {filteredAndSortedData.map((item, index) => (
-                  <FinanceItem item={item} index={index} key={index} />
-                ))}
-              </div>
-            )}
-
+      {transactionsList.length > 0 ? (
+        <div className="w-full max-w-[800px] flex flex-col gap-3 px-2 py-4">
+          <Label>Pesquisar por nome</Label>
+          <div className="flex w-full items-center space-x-2">
+            <Input
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              type="text"
+              placeholder="Pesquise os itens..."
+            />
           </div>
         </div>
-      </div>
+      ) : null}
+
+      {filteredList.length === 0 ? (
+        <EmptyMessage />
+      ) : (
+        <>
+          <div className="w-full max-w-[800px] flex flex-col gap-3 px-2 py-4">
+            {filteredList.map((item, index) => (
+              <FinanceItem item={item} index={index} key={index} />
+            ))}
+          </div>
+
+          <div className="w-full max-w-[800px] flex flex-row px-2 justify-between items-center gap-4 mb-8">
+            <h2 className="font-semibold dark:text-white text-gray-800 text-xl">
+              Total
+            </h2>
+            <h2 className="font-semibold dark:text-white text-gray-800 text-xl">
+              {formatCurrency(listTotal)}
+            </h2>
+          </div>
+        </>
+      )}
+
       <Footer />
 
       <Dialog>
@@ -383,4 +307,4 @@ function Reports() {
   );
 }
 
-export default Reports;
+export default Financas;

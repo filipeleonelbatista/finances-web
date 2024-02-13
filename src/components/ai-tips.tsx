@@ -1,22 +1,23 @@
-import { useMemo, useState } from "react";
-import { Avatar, AvatarFallback } from "./ui/avatar";
-import { TbRobotFace } from "react-icons/tb";
 import { usePayments } from "@/hooks/usePayments";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
-import Typewriter from "./typewriter";
+import { useMemo, useState } from "react";
 import { IoCloseCircleOutline } from "react-icons/io5";
+import { TbRobotFace } from "react-icons/tb";
+import { useNavigate } from "react-router-dom";
+import Typewriter from "./typewriter";
+import { Avatar, AvatarFallback } from "./ui/avatar";
+import { Button } from "./ui/button";
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
 function AiTips() {
+  const navigate = useNavigate();
   const { filteredList, Total, Expenses, Incomings } = usePayments();
   const [position, setPosition] = useState(Math.floor(Math.random() * 4));
   const [isShow, setIsShow] = useState(true);
-
-
 
   const formatCurrency = (value) => {
     return value.toLocaleString("pt-BR", {
@@ -143,6 +144,14 @@ function AiTips() {
       <p className="text-sm italic">
         <Typewriter text={tips[position].description} indicator={true} />
       </p>
+      {position == 2 && (
+        <div className="w-full flex flex-row gap-6">
+          <p className="text-sm italic">
+            <Typewriter text={"Aproveite e simule investimentos para ter o dinheiro trabalhando para você"} indicator={true} />
+          </p>
+          <Button onClick={() => navigate("investiments")}>Simular investimentos</Button>
+        </div>
+      )}
       <p className="text-[10px] pt-4 italic">
         Assistente financeiro digital TUTU (beta)
       </p>
