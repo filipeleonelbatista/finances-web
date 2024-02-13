@@ -71,8 +71,8 @@ function SimulatorForm({ parameters }: SimuladorProps) {
   const estimateRevenue = useMemo(() => {
 
     const months = parseInt(marks[timeInMonths])
-    const initialValue = parseFloat(initialInvestiment.replaceAll(".", "").replace(",", "."))
-    const montlyValue = parseFloat(montlyInvestiment.replaceAll(".", "").replace(",", "."))
+    const initialValue = parseFloat(initialInvestiment.replace(/\./g, "").replace(",", "."))
+    const montlyValue = parseFloat(montlyInvestiment.replace(/\./g, "").replace(",", "."))
     const percentageGain = parameters.value
 
     const totalInvest = (months * montlyValue) + initialValue
