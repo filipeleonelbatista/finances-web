@@ -47,10 +47,23 @@ function Settings() {
   } = useSettings();
 
   const handleCsvExport = () => {
-    const headers = Object.keys(transactionsList[0]);
+    const headers = [
+      "id",
+      "_status",
+      "_changed",
+      "description",
+      "amount",
+      "category",
+      "date",
+      "paymentDate",
+      "paymentStatus",
+      "isEnabled",
+      "isFavorited",
+    ];
+
     const csvContent = [
       headers.join(','),
-      ...transactionsList.map(obj => `${obj.id},${obj._status ?? ""},${obj._created ?? ""},${obj.description},${obj.amount},${obj.category},${new Date(obj.date).getTime()},${obj.paymentDate === "" ? obj.paymentDate : new Date(obj.paymentDate).getTime()},${obj.paymentStatus ? "1" : "0"},${obj.isEnabled ? "1" : "0"},${obj.isFavorited ? "1" : "0"}`)
+      ...transactionsList.map(obj => `${obj.id},${obj._status ?? ""},${obj._changed ?? ""},${obj.description},${obj.amount},${obj.category},${new Date(obj.date).getTime()},${obj.paymentDate === "" ? obj.paymentDate : new Date(obj.paymentDate).getTime()},${obj.paymentStatus ? "1" : "0"},${obj.isEnabled ? "1" : "0"},${obj.isFavorited ? "1" : "0"}`)
     ].join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
 
@@ -139,10 +152,20 @@ function Settings() {
   };
 
   const handleCsvExportStock = () => {
-    const headers = Object.keys(StockList[0]);
+    const headers = [
+      "id",
+      "_status",
+      "_changed",
+      "description",
+      "amount",
+      "category",
+      "quantity",
+      "quantityDesired",
+    ];
+
     const csvContent = [
       headers.join(','),
-      ...StockList.map(obj => `${obj.id},${obj._status ?? ""},${obj._created ?? ""},${obj.description},${obj.category},${obj.amount},${obj.quantity},${obj.quantityDesired}`)
+      ...StockList.map(obj => `${obj.id},${obj._status ?? ""},${obj._changed ?? ""},${obj.description},${obj.amount},${obj.category},${obj.quantity},${obj.quantityDesired}`)
     ].join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
 
@@ -228,10 +251,21 @@ function Settings() {
   };
 
   const handleCsvExportRuns = () => {
-    const headers = Object.keys(FuelList[0]);
+    const headers = [
+      "id",
+      "_status",
+      "_changed",
+      "currentDistance",
+      "unityAmount",
+      "amount",
+      "type",
+      "date",
+      "location",
+    ];
+
     const csvContent = [
       headers.join(','),
-      ...FuelList.map(obj => `${obj.id},${obj._status ?? ""},${obj._created ?? ""},${obj.currentDistance},${obj.unityAmount},${obj.amount},${obj.type},${new Date(obj.date).getTime()},${obj.location}`)
+      ...FuelList.map(obj => `${obj.id},${obj._status ?? ""},${obj._changed ?? ""},${obj.currentDistance},${obj.unityAmount},${obj.amount ?? ""},${obj.type},${new Date(obj.date).getTime()},${obj.location}`)
     ].join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
 
@@ -274,10 +308,11 @@ function Settings() {
                 "_changed",
                 "currentDistance",
                 "unityAmount",
+                "amount",
                 "type",
                 "date",
                 "location",
-              ];
+              ]
 
               const isValidCSV = records.every((record) =>
                 requiredCampos.every((campo) => campo in record)
