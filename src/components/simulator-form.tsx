@@ -90,7 +90,7 @@ function SimulatorForm({ parameters }: SimuladorProps) {
 
     for (var i = 0; i < months; i++) {
       selectedTaxGainValue += montlyValue;
-      selectedTaxGainValue *= (1 + percentageGain / 12);
+      selectedTaxGainValue *= (percentageGain / 12) + 1;
     }
 
     selectedTaxGainValue = selectedTaxGainValue - totalInvest;

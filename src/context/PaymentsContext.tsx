@@ -11,6 +11,7 @@ import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { v4 as uuidv4 } from "uuid";
 import { useToast } from "@/components/ui/use-toast";
+import { useSettings } from "@/hooks/useSettings";
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
@@ -19,6 +20,7 @@ export const PaymentsContext = createContext({});
 
 export function PaymentsContextProvider(props) {
   const { toast } = useToast()
+  const { willUsePrefixToRemoveTihteSum, prefixTithe } = useSettings();
 
   const [transactionsList, setTransactionsList] = useState([]);
   const [selectedPaymentStatus, setSelectedPaymentStatus] = useState("Todos");
@@ -236,6 +238,39 @@ export function PaymentsContextProvider(props) {
     return soma;
   }, [filteredList]);
 
+  const Tithe = useMemo(() => {
+    let soma = 0.0
+    for (const item of filteredList) {
+      if (!item.isEnabled) {
+        soma = soma + item.amount
+      }
+      if (item.isEnabled && willUsePrefixToRemoveTihteSum) {
+        if (prefixTithe != "" && item.description.includes(prefixTithe)) {
+          soma = soma - item.amount
+        }
+      }
+    }
+
+    if (soma < 0) {
+      soma = 0.0
+    }
+
+    return (soma * 10) / 100;
+  }, [selectedPeriod, prefixTithe, willUsePrefixToRemoveTihteSum, filteredList])
+
+  const Saldo = useMemo(() => {
+    let soma = 0.0
+    for (const item of transactionsList) {
+      if (item.isEnabled) {
+        soma = soma - parseFloat(item.amount);
+      } else {
+        soma = soma + parseFloat(item.amount);
+      }
+    }
+    return soma;
+  }, [transactionsList])
+
+
   async function handleFavorite(currentTransaction) {
     const transactionToUpdate = transactionsList.find(
       (transaction) => transaction.id === currentTransaction.id
@@ -291,6 +326,23 @@ export function PaymentsContextProvider(props) {
       description: "Item excluido com sucesso!",
       variant: "success"
     })
+    loadTransactions();
+  }
+
+
+  async function deleteAllTransaction() {
+    if (confirm("Deseja realmete excluir os dados da tabela finanças? Essa ação é permanente.")) {
+      localStorage.setItem(
+        "finances",
+        JSON.stringify([])
+      );
+    }
+
+    toast({
+      description: "Tabela apagada com sucesso!",
+      variant: "success"
+    })
+
     loadTransactions();
   }
 
@@ -430,6 +482,9 @@ export function PaymentsContextProvider(props) {
         setStartDate,
         endDate,
         setEndDate,
+        deleteAllTransaction,
+        Tithe,
+        Saldo
       }}
     >
       {props.children}

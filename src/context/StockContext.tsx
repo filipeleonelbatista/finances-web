@@ -109,6 +109,51 @@ export function StockContextProvider(props) {
     })
     loadTransactions();
   }
+  
+  async function deleteAllTransaction() {
+    if (confirm("Deseja realmete excluir os dados da tabela Estoque? Essa ação é permanente.")) {
+      localStorage.setItem(
+        "stock",
+        JSON.stringify([])
+      );
+    }
+
+    toast({
+      description: "Tabela apagada com sucesso!",
+      variant: "success"
+    })
+
+    loadTransactions();
+  }
+
+  async function importTransactions(importedList) {
+    const convertedList = importedList.map((item) => {
+      const convertedItem = { ...item };
+
+      // Convertendo 'date' para Date
+      if (convertedItem.date && typeof convertedItem.date === "string") {
+        convertedItem.date = new Date(parseInt(convertedItem.date, 10));
+      }
+
+      // Convertendo 'amount' para boolean
+      if (convertedItem.amount && typeof convertedItem.amount === "string") {
+        convertedItem.amount = parseFloat(convertedItem.amount);
+      }
+
+      return convertedItem;
+    });
+
+    localStorage.setItem(
+      "stock",
+      JSON.stringify([...convertedList, ...StockList])
+    );
+
+    toast({
+      description: "Importação conclúida com sucesso!",
+      variant: "success"
+    })
+    loadTransactions();
+  }
 
   async function addTransaction(newTransaction) {
     newTransaction.id = uuidv4();
@@ -162,6 +207,8 @@ export function StockContextProvider(props) {
         setSearch,
         updateStock,
         loadTransactions,
+        deleteAllTransaction,
+        importTransactions
       }}
     >
       {props.children}

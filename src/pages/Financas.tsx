@@ -33,6 +33,8 @@ import {
 import { usePayments } from "../hooks/usePayments";
 import AiTips from "../components/ai-tips";
 import Ad from "../components/ad";
+import { useSettings } from "@/hooks/useSettings";
+import { cn } from "@/lib/utils";
 
 function Financas() {
   const [showFilter, setShowFilter] = useState(false);
@@ -64,7 +66,14 @@ function Financas() {
     setStartDate,
     endDate,
     setEndDate,
+    Tithe,
+    Saldo
   } = usePayments();
+
+  const {
+    isEnableTitheCard,
+    isEnableTotalHistoryCard,
+  } = useSettings();
 
   const formatCurrency = (value) => {
     return value.toLocaleString("pt-BR", {
@@ -87,9 +96,9 @@ function Financas() {
   return (
     <div className="w-full h-full flex flex-col bg-gray-100 dark:bg-gray-900 items-center">
       <Header title="Financa" />
-
-      <div className="w-full max-w-[800px] px-2 grid sm:grid-rows-3 sm:grid-cols-none md:grid-rows-none md:grid-cols-3 gap-4 mt-[-64px] mb-2">
-        <div className="px-4 py-3 flex flex-col rounded bg-white dark:bg-gray-800 drop-shadow-lg">
+      <div
+        className="w-full max-w-[800px] px-2 grid sm:grid-rows-3 md:grid-cols-3 sm:grid-cols-none md:grid-rows-none gap-4 mt-[-64px] mb-2">
+        <div className="w-full px-4 py-3 flex flex-col rounded bg-white dark:bg-gray-800 drop-shadow-lg">
           <div className="w-full flex flex-row items-center justify-between">
             <p className="text-xl">Entradas</p>
             <FiArrowUpCircle className="w-8 h-8 text-green-500" />
@@ -99,7 +108,7 @@ function Financas() {
           </p>
         </div>
 
-        <div className="px-4 py-3 flex flex-col rounded bg-white dark:bg-gray-800 drop-shadow-lg">
+        <div className="w-full px-4 py-3 flex flex-col rounded bg-white dark:bg-gray-800 drop-shadow-lg">
           <div className="w-full flex flex-row items-center justify-between">
             <p className="text-xl">Saidas</p>
             <FiArrowDownCircle className="w-8 h-8 text-red-500" />
@@ -109,7 +118,7 @@ function Financas() {
           </p>
         </div>
 
-        <div className="px-4 py-3 flex flex-col rounded bg-purple-700 drop-shadow-lg">
+        <div className="w-full px-4 py-3 flex flex-col rounded bg-purple-700 drop-shadow-lg">
           <div className="w-full flex flex-row items-center justify-between">
             <p className="text-xl text-white">Total</p>
             <FiDollarSign className="w-8 h-8 text-white" />
@@ -118,6 +127,28 @@ function Financas() {
             {formatCurrency(Total ? Total : 0)}
           </p>
         </div>
+        {isEnableTotalHistoryCard && (
+          <div className="w-full px-4 py-3 flex flex-col rounded bg-purple-700 drop-shadow-lg">
+            <div className="w-full flex flex-row items-center justify-between">
+              <p className="text-xl text-white">Saldo</p>
+              <FiDollarSign className="w-8 h-8 text-white" />
+            </div>
+            <p className="text-2xl mt-6 text-white">
+              {formatCurrency(Saldo ? Saldo : 0)}
+            </p>
+          </div>
+        )}
+        {isEnableTitheCard && (
+          <div className="w-full px-4 py-3 flex flex-col rounded bg-purple-700 drop-shadow-lg">
+            <div className="w-full flex flex-row items-center justify-between">
+              <p className="text-xl text-white">Dízimo</p>
+              <FiDollarSign className="w-8 h-8 text-white" />
+            </div>
+            <p className="text-2xl mt-6 text-white">
+              {formatCurrency(Tithe ? Tithe : 0)}
+            </p>
+          </div>
+        )}
       </div>
       <div className="w-full max-w-[800px] px-2 flex mb-4">
         <p>* Totais apenas dos itens do período selecionado</p>

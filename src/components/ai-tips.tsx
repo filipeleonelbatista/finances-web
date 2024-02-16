@@ -2,7 +2,7 @@ import { usePayments } from "@/hooks/usePayments";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { TbRobotFace } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
@@ -15,9 +15,20 @@ dayjs.extend(isSameOrBefore);
 
 function AiTips() {
   const navigate = useNavigate();
-  const { filteredList, Total, Expenses, Incomings } = usePayments();
+  const { filteredList, Total, Expenses, Incomings, transactionsList } = usePayments();
   const [position, setPosition] = useState(Math.floor(Math.random() * 4));
   const [isShow, setIsShow] = useState(true);
+
+  const [showButton, setShowButton] = useState(false);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setShowButton(true);
+    }, 8000);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
+
 
   const formatCurrency = (value) => {
     return value.toLocaleString("pt-BR", {
@@ -88,7 +99,7 @@ function AiTips() {
       });
 
       tipsArray.push({
-        title: `Você possui ${numberOfTransactions} contas para esta semana.`,
+        title: `Você possui ${numberOfTransactions} contas a vencer para esta semana.`,
         description: `O valor total das contas da semana atual é ${formatCurrency(totalAmount)}!\nVerifique a possibilidade de renegociação ou adiantamento para poder reduzir o valor das contas e reter mais dinheiro nesse período.`
       })
     }
@@ -133,23 +144,23 @@ function AiTips() {
             <TbRobotFace className="w-4 h-4" />
           </AvatarFallback>
         </Avatar>
-        <p className="text-sm font-semibold">
+        <div className="text-sm font-semibold">
           <Typewriter text="Tutu tem uma mensagem para você..." />
-        </p>
+        </div>
       </div>
 
-      <p className="text-sm font-semibold">
+      <div className="text-sm font-semibold">
         <Typewriter text={tips[position].title} />
-      </p>
-      <p className="text-sm italic">
+      </div>
+      <div className="text-sm italic">
         <Typewriter text={tips[position].description} indicator={true} />
-      </p>
+      </div>
       {position == 2 && (
-        <div className="w-full flex flex-row gap-6">
-          <p className="text-sm italic">
+        <div className="w-full flex flex-col gap-2">
+          <div className="text-sm italic">
             <Typewriter text={"Aproveite e simule investimentos para ter o dinheiro trabalhando para você"} indicator={true} />
-          </p>
-          <Button onClick={() => navigate("investiments")}>Simular investimentos</Button>
+          </div>
+          <Button data-show={showButton} className="w-fit ease-in data-[show=false]:h-[0px] data-[show=true]:h-fit opacity-0 data-[show=true]:opacity-100 transition-all duration-800" onClick={() => navigate("investiments")}>Simular investimentos</Button>
         </div>
       )}
       <p className="text-[10px] pt-4 italic">
