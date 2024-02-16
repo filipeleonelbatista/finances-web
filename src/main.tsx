@@ -11,7 +11,7 @@ import { SettingsContextProvider } from "./context/SettingsContext.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <SettingsContextProvider>
         <PaymentsContextProvider>
           <StockContextProvider>
