@@ -336,12 +336,16 @@ export function PaymentsContextProvider(props) {
         "finances",
         JSON.stringify([])
       );
+      toast({
+        description: "Tabela apagada com sucesso!",
+        variant: "success"
+      })
+    } else {
+      toast({
+        description: "Nada foi excluido!",
+        variant: "success"
+      })
     }
-
-    toast({
-      description: "Tabela apagada com sucesso!",
-      variant: "success"
-    })
 
     loadTransactions();
   }

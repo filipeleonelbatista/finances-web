@@ -109,19 +109,24 @@ export function StockContextProvider(props) {
     })
     loadTransactions();
   }
-  
+
   async function deleteAllTransaction() {
     if (confirm("Deseja realmete excluir os dados da tabela Estoque? Essa ação é permanente.")) {
       localStorage.setItem(
         "stock",
         JSON.stringify([])
       );
+      toast({
+        description: "Tabela apagada com sucesso!",
+        variant: "success"
+      })
+    }else{      
+      toast({
+        description: "Nada foi excluido!",
+        variant: "success"
+      })
     }
 
-    toast({
-      description: "Tabela apagada com sucesso!",
-      variant: "success"
-    })
 
     loadTransactions();
   }

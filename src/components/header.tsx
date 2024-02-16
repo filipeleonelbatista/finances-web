@@ -16,6 +16,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { IoCarSportOutline } from "react-icons/io5";
 
 interface HeaderProps {
   title: string;
@@ -63,6 +64,12 @@ function Header({ title = "", isShort }: HeaderProps) {
                   Estoque
                   <DropdownMenuShortcut>
                     <GiShoppingCart />
+                  </DropdownMenuShortcut>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/runs")}>
+                  Corridas
+                  <DropdownMenuShortcut>
+                    <IoCarSportOutline />
                   </DropdownMenuShortcut>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />

@@ -12,6 +12,7 @@ import { usePayments } from "@/hooks/usePayments";
 import { IoTrashOutline } from "react-icons/io5";
 import { useSettings } from "@/hooks/useSettings";
 import { useStock } from "@/hooks/useStock";
+import { useRuns } from "@/hooks/useRuns";
 
 function Settings() {
   const { toast } = useToast()
@@ -27,6 +28,12 @@ function Settings() {
     importTransactions: importStocks,
     StockList
   } = useStock();
+
+  const {
+    deleteAllTransaction: deleteAllRuns,
+    importTransactions: importRuns,
+    FuelList
+  } = useRuns();
 
   const {
     handleSwitchViewTotalHistoryCard,
@@ -135,7 +142,7 @@ function Settings() {
     const headers = Object.keys(StockList[0]);
     const csvContent = [
       headers.join(','),
-      ...StockList.map(obj => `${obj.id},${obj._status ?? ""},${obj._created ?? ""},${obj.description},${obj.category},${obj.amount},${obj.quantity},${obj.quantityDesired},`)
+      ...StockList.map(obj => `${obj.id},${obj._status ?? ""},${obj._created ?? ""},${obj.description},${obj.category},${obj.amount},${obj.quantity},${obj.quantityDesired}`)
     ].join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
 
@@ -189,6 +196,95 @@ function Settings() {
 
               if (isValidCSV) {
                 importStocks(records);
+              } else {
+                toast({
+                  description: "O arquivo CSV está mal formatado. Verifique se todos os campos necessários estão presentes.",
+                  variant: "destructive"
+                })
+              }
+            },
+          });
+        } catch (error) {
+          toast({
+            description: "Erro ao analisar o arquivo CSV!",
+            variant: "destructive"
+          })
+          console.error("Erro ao analisar o arquivo CSV:", error);
+        }
+      };
+
+      reader.readAsText(arquivoSelecionado);
+
+      toast({
+        description: "Arquivo importado com sucesso!",
+        variant: "destructive"
+      })
+    } else {
+      toast({
+        description: "Por favor, selecione um arquivo CSV.",
+        variant: "destructive"
+      })
+    }
+  };
+
+  const handleCsvExportRuns = () => {
+    const headers = Object.keys(FuelList[0]);
+    const csvContent = [
+      headers.join(','),
+      ...FuelList.map(obj => `${obj.id},${obj._status ?? ""},${obj._created ?? ""},${obj.currentDistance},${obj.unityAmount},${obj.amount},${obj.type},${new Date(obj.date).getTime()},${obj.location}`)
+    ].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+    toast({
+      description: "Exportação feita com sucesso!",
+      variant: "success"
+    })
+
+    const link = document.createElement('a');
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `corridas-${Date.now()}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  }
+
+  const handleArquivoChangeRuns = async (event) => {
+    const arquivoSelecionado = event.target.files[0];
+
+    if (arquivoSelecionado && arquivoSelecionado.name.endsWith(".csv")) {
+      const reader = new FileReader();
+
+      reader.onload = async (e) => {
+        const csvContent = e.target.result;
+
+        try {
+          Papa.parse(csvContent, {
+            header: true,
+            skipEmptyLines: true,
+            complete: (result) => {
+              const records = result.data;
+
+              const requiredCampos = [
+                "id",
+                "_status",
+                "_changed",
+                "currentDistance",
+                "unityAmount",
+                "type",
+                "date",
+                "location",
+              ];
+
+              const isValidCSV = records.every((record) =>
+                requiredCampos.every((campo) => campo in record)
+              );
+
+              if (isValidCSV) {
+                importRuns(records);
               } else {
                 toast({
                   description: "O arquivo CSV está mal formatado. Verifique se todos os campos necessários estão presentes.",
@@ -299,7 +395,6 @@ function Settings() {
 
         <div className="w-full bg-gray-500 dark:bg-gray-400 h-[1px] my-2 md:my-4"></div>
 
-
         <div className="w-full flex flex-col gap-2 md:gap-4">
           <p className="text-2xl font-bold mb-4">Estoque</p>
 
@@ -307,7 +402,7 @@ function Settings() {
             <FaRegFileLines className="mr-2" />
             Exportar lista de estoque
           </Button>
-          
+
           <div className="w-full flex flex-col">
             <Button onClick={() => document.getElementById("csvStock")?.click()} className="bg-purple-600 hover:bg-purple-900">
               <FaRegFileLines className="mr-2" />
@@ -331,6 +426,43 @@ function Settings() {
           <Button onClick={deleteAllStocks} className="bg-red-600 hover:bg-red-900">
             <IoTrashOutline className="mr-2" />
             Apagar lista de estoque
+          </Button>
+
+        </div>
+
+        <div className="w-full bg-gray-500 dark:bg-gray-400 h-[1px] my-2 md:my-4"></div>
+
+        <div className="w-full flex flex-col gap-2 md:gap-4">
+          <p className="text-2xl font-bold mb-4">Corridas</p>
+
+          <Button onClick={handleCsvExportRuns} className="bg-purple-600 hover:bg-purple-900">
+            <FaRegFileLines className="mr-2" />
+            Exportar lista de abastecimentos
+          </Button>
+
+          <div className="w-full flex flex-col">
+            <Button onClick={() => document.getElementById("csvRuns")?.click()} className="bg-purple-600 hover:bg-purple-900">
+              <FaRegFileLines className="mr-2" />
+              Importar lista de abastecimentos
+            </Button>
+            <p>Use um arquivo <b>.CSV</b> gerado pelo sistema para importar os dados de um amigo ou familiar</p>
+            <div className="sr-only">
+              <div className="grid w-full max-w-sm items-center gap-1.5">
+                <Label htmlFor="csvRuns">csv</Label>
+                <Input
+                  hidden
+                  id="csvRuns"
+                  type="file"
+                  accept=".csv"
+                  value=""
+                  onChange={(event) => handleArquivoChangeRuns(event)}
+                />
+              </div>
+            </div>
+          </div>
+          <Button onClick={deleteAllRuns} className="bg-red-600 hover:bg-red-900">
+            <IoTrashOutline className="mr-2" />
+            Apagar lista de abastecimentos
           </Button>
 
         </div>

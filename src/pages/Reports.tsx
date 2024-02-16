@@ -25,6 +25,8 @@ import {
 import { usePayments } from "../hooks/usePayments";
 import { useTheme } from "../components/theme-provider";
 import { useSettings } from "@/hooks/useSettings";
+import { useRuns } from "@/hooks/useRuns";
+import dayjs from "dayjs";
 
 function Reports() {
   const { theme } = useTheme();
@@ -52,12 +54,38 @@ function Reports() {
     setEndDate,
     Tithe,
     Saldo
-  } = usePayments();  
+  } = usePayments();
 
   const {
     isEnableTitheCard,
     isEnableTotalHistoryCard,
   } = useSettings();
+
+  const { FuelList } = useRuns();
+
+  const [selectedRunsFilter, setSelectedRunsFilter] = useState("litro");
+
+  const runsChartData = useMemo(() => {
+    const currentFuelList = FuelList;
+
+    const last8Elements = currentFuelList
+      .sort((a, b) => a.date - b.date)
+      .slice(-8);
+
+    const labels = last8Elements.map((item) => {
+      const dateObj = new Date(item.date);
+      const dia = dateObj.getUTCDate().toString().padStart(2, "0");
+      const mes = (dateObj.getUTCMonth() + 1).toString().padStart(2, "0");
+      return `${dia}/${mes}`;
+    });
+
+    const data = last8Elements.map((item) =>
+      selectedRunsFilter === "litro" ? item.unityAmount : item.amount
+    );
+
+    return { labels, data, fullList: last8Elements };
+  }, [FuelList, selectedRunsFilter]);
+
 
   const expensesByCategory = useMemo(() => {
     const gastosHabilitados = filteredList.filter(item => item.isEnabled);
@@ -293,63 +321,8 @@ function Reports() {
       </div>
 
       <div className="w-full max-w-[800px] px-2 flex flex-col justify-between items-center gap-4 mb-4">
-        <div className="w-full flex flex-col md:flex-row gap-2 md:gap-4">
-          <div className="w-full flex flex-col gap-2 md:gap-4">
-            <div className="w-full px-4 py-3 gap-2 md:gap-4 flex flex-col">
-              <h3 className="text-lg font-semibold">Gastos por categoria</h3>
-              <Chart
-                type="pie"
-                options={
-                  {
-                    chart: {
-                      width: '100%',
-                      type: 'pie',
-                    },
-                    labels: expensesByCategory.label,
-                    theme: {
-                      monochrome: {
-                        color: "#9333ea",
-                        enabled: true
-                      }
-                    },
-                    plotOptions: {
-                      pie: {
-                        dataLabels: {
-                          offset: -5
-                        }
-                      }
-                    },
-                    dataLabels: {
-                      formatter(val: number, opts?: any) {
-                        const name = opts.w.globals.labels[opts.seriesIndex]
-                        return [name, formatCurrency(expensesByCategory.value[opts.seriesIndex] ?? 0), val.toFixed(1) + '%']
-                      }
-                    },
-                    legend: {
-                      show: false
-                    },
-                    stroke: {
-                      show: false
-                    },
-                    tooltip: {
-                      marker: {
-                        show: false,
-                      },
-                      enabled: true,
-                      y: {
-                        formatter: () => "",
-                        title: {
-                          formatter(val: number, opts?: any) {
-                            const name = opts.w.globals.labels[opts.seriesIndex]
-                            return `${name + " - " + formatCurrency(expensesByCategory.value[opts.seriesIndex] ?? 0)}`
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-                series={expensesByCategory.percentage} />
-            </div>
+        {
+          filteredList.length > 0 && (
             <div className="w-full px-4 py-3 flex flex-col rounded bg-white dark:bg-gray-800 drop-shadow-lg">
               <h3 className="text-lg font-semibold">Saúde Financeira</h3>
               <div className="w-full space-y-2 flex flex-row items-center justify-between">
@@ -377,21 +350,141 @@ function Reports() {
                 }}></div>
               </div>
             </div>
+          )
+        }
+        <div className="w-full flex flex-col md:flex-row gap-2 md:gap-4">
+          <div className="w-full flex flex-col gap-2 md:gap-4">
+            <div className="w-full px-4 py-3 gap-2 md:gap-4 flex flex-col">
+              <h3 className="text-lg font-semibold">Gastos por categoria</h3>
+              {
+                expensesByCategory.value.length === 0 ?
+                  <EmptyMessage /> : <Chart
+                    type="pie"
+                    options={
+                      {
+                        chart: {
+                          width: '100%',
+                          type: 'pie',
+                        },
+                        labels: expensesByCategory.label,
+                        theme: {
+                          monochrome: {
+                            color: "#9333ea",
+                            enabled: true
+                          }
+                        },
+                        plotOptions: {
+                          pie: {
+                            dataLabels: {
+                              offset: -5
+                            }
+                          }
+                        },
+                        dataLabels: {
+                          formatter(val: number, opts?: any) {
+                            const name = opts.w.globals.labels[opts.seriesIndex]
+                            return [name, formatCurrency(expensesByCategory.value[opts.seriesIndex] ?? 0), val.toFixed(1) + '%']
+                          }
+                        },
+                        legend: {
+                          show: false
+                        },
+                        stroke: {
+                          show: false
+                        },
+                        tooltip: {
+                          marker: {
+                            show: false,
+                          },
+                          enabled: true,
+                          y: {
+                            formatter: () => "",
+                            title: {
+                              formatter(val: number, opts?: any) {
+                                const name = opts.w.globals.labels[opts.seriesIndex]
+                                return `${name + " - " + formatCurrency(expensesByCategory.value[opts.seriesIndex] ?? 0)}`
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                    series={expensesByCategory.percentage} />
+              }
+            </div>
           </div>
 
-          <div className="w-full py-3 flex flex-col">
-            <h3 className="ml-2 text-lg font-semibold">Maiores gastos</h3>
-            {filteredAndSortedData.length === 0 ? (
-              <EmptyMessage />
-            ) : (
-              <div className="w-full max-w-[800px] flex flex-col gap-3 px-2 py-4">
-                {filteredAndSortedData.map((item, index) => (
-                  <FinanceItem item={item} index={index} key={index} />
-                ))}
+          <div className="w-full flex flex-col gap-2 md:gap-4">
+            <div className="w-full px-4 py-3 gap-2 md:gap-4 flex flex-col">
+              <h3 className="text-lg font-semibold">Abastecimentos</h3>
+              <div className="w-full flex gap-2">
+                <Button
+                  data-filter={selectedRunsFilter}
+                  className="w-full border-purple-600 text-purple-600 bg-transparent data-[filter='litro']:bg-purple-600 data-[filter='litro']:text-white data-[filter='litro']:hover:bg-purple-900 hover:border-purple-900 hover:text-purple-900" variant="outline"
+                  onClick={() => setSelectedRunsFilter("litro")}
+                >
+                  Litro
+                </Button>
+                <Button
+                  data-filter={selectedRunsFilter}
+                  className="w-full border-purple-600 text-purple-600 bg-transparent data-[filter='abastecimento']:bg-purple-600 data-[filter='abastecimento']:text-white data-[filter='litro']:hover:bg-purple-900 hover:border-purple-900 hover:text-purple-900"
+                  variant="outline"
+                  onClick={() => setSelectedRunsFilter("abastecimento")}
+                >
+                  Abastecimento
+                </Button>
               </div>
-            )}
-
+              {
+                runsChartData.data.length === 0 ?
+                  <EmptyMessage /> : <Chart
+                    type="area"
+                    options={
+                      {
+                        colors: ['#9333ea'],
+                        chart: {
+                          width: '100%',
+                          type: 'area',
+                          toolbar: {
+                            show: false,
+                          }
+                        },
+                        dataLabels: {
+                          enabled: false
+                        },
+                        stroke: {
+                          curve: 'smooth'
+                        },
+                        xaxis: {
+                          type: 'category',
+                          categories: runsChartData.labels
+                        },
+                        tooltip: {
+                          x: {
+                            format: 'dd/MM/yy HH:mm'
+                          },
+                        },
+                      }
+                    }
+                    series={[{
+                      name: selectedRunsFilter === 'litro' ? "Valor pago por litro: R$" : "Valor gasto por abastecimento: R$",
+                      data: runsChartData.data
+                    }]} />
+              }
+            </div>
           </div>
+        </div>
+        <div className="w-full py-3 flex flex-col">
+          <h3 className="ml-2 text-lg font-semibold">Maiores gastos</h3>
+          {filteredAndSortedData.length === 0 ? (
+            <EmptyMessage />
+          ) : (
+            <div className="w-full max-w-[800px] flex flex-col gap-3 px-2 py-4">
+              {filteredAndSortedData.map((item, index) => (
+                <FinanceItem item={item} index={index} key={index} />
+              ))}
+            </div>
+          )}
+
         </div>
       </div>
       <Footer />

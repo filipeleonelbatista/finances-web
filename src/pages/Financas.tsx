@@ -34,7 +34,6 @@ import { usePayments } from "../hooks/usePayments";
 import AiTips from "../components/ai-tips";
 import Ad from "../components/ad";
 import { useSettings } from "@/hooks/useSettings";
-import { cn } from "@/lib/utils";
 
 function Financas() {
   const [showFilter, setShowFilter] = useState(false);
