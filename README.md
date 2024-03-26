@@ -12,7 +12,8 @@ Aplicativo para gerenciar as finanças da minha família. Com este app eu gerenc
 estoque de produtos da casa e hodômetro do carro para acompanhar os custos de abastecimento. Na parte das contas tem uma
 Integração com a OpenAi para gerar análises baseadas nos dados inseridos pelo usuário.
 
-[Link do Site](https://enviodemensagensemmassa.vercel.app/)
+[Link do Site](https://minhasfinancas.vercel.app/)
+[Link do Aplicativo na Google Play](https://play.google.com/store/apps/details?id=com.finances)
 
 ## Objetivo
 
