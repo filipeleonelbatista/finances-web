@@ -1,30 +1,83 @@
-# React + TypeScript + Vite  
+<img width="100%" src=".github/3.png">
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Indice
 
-Currently, two official plugins are available:
+- [Sobre](#-sobre)
+- [Tecnologias](#Tecnologias)
+- [Instalação](#Instalação)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🔖&nbsp; Sobre
 
-## Expanding the ESLint configuration
+Aplicativo para gerenciar as finanças da minha família. Com este app eu gerencio entradas e saidas das contas, controle de 
+estoque de produtos da casa e hodômetro do carro para acompanhar os custos de abastecimento. Na parte das contas tem uma
+Integração com a OpenAi para gerar análises baseadas nos dados inseridos pelo usuário.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+[Link do Site](https://enviodemensagensemmassa.vercel.app/)
 
-- Configure the top-level `parserOptions` property like this:
+## Objetivo
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+Criei este app para ajudar minha família a gerenciar melhor as finanças pessoais. Baseado no DevFinances da Rocketseat usei os
+conhecimentos adiquiridos para desenvolver e ampliar meus conhecimentos com IA e Tailwind entre outras tecnologias usadas.
+Tive um total de 100 Downloads na loja da Google play e acessando este app mensalmente algo em torno de 10 usuários.
+O Projeto segue em desenvolvimento para poder monetizar ele. Esta versão final para portfolio.
+
+Falo mais [NESTE POST](https://www.linkedin.com/posts/filipeleonelbatista_ia-ai-inteligenciaartificial-activity-7085289369468571648-43Bp?utm_source=share&utm_medium=member_desktop) do meu Linkedin.
+ 
+---
+## Tecnologias
+
+Esse projeto foi desenvolvido com as seguintes principais tecnologias:
+
+- [React JS](https://legacy.reactjs.org/docs/getting-started.html)
+- [TailwindCSS](https://tailwindcss.com/)
+- [Typescript](https://www.typescriptlang.org/)
+- [Apex Charts](https://apexcharts.com/docs/installation/)
+- [React Native](https://facebook.github.io/react-native/)
+- [Expo](https://expo.io/)
+- [WatermelonDB](https://github.com/Nozbe/WatermelonDB)
+- [Native Base](https://nativebase.io/)
+- [React Native Charts kit](https://www.npmjs.com/package/react-native-chart-kit)
+
+e mais...
+
+---
+## Instalação
+
+O projeto roda com [Node.js](https://nodejs.org/) v20+.
+
+Instruções para instalar as dependencias e inicie o projeto.
+
+### Web
+
+```sh
+cd finances-web
+npm i
+npx run dev
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### Mobile
+
+Precisa acessar este projeto [REPOSITÓRIO](https://github.com/filipeleonelbatista/finances-app)
+
+## API da OpenAI
+
+Dentro do aplicativo mobile você precisará ter sua chave da api para colocar em configurações para habilitar o botão da inteligência artificial.
+
+---
+
+<h3 align="center" >Vamos nos conectar 😉</h3>
+<p align="center">
+  <a href="https://www.linkedin.com/in/filipeleonelbatista/">
+    <img alt="LinkedIn" width="22px" src="https://github.com/filipeleonelbatista/filipeleonelbatista/blob/master/assets/052-linkedin.svg" />
+  </a>&ensp;
+  <a href="mailto:filipe.x2016@gmail.com">
+    <img alt="Email" width="22px" src="https://github.com/filipeleonelbatista/filipeleonelbatista/blob/master/assets/gmail.svg" />
+  </a>&ensp;
+  <a href="https://instagram.com/filipeleonelbatista">
+    <img alt="Instagram" width="22px" src="https://github.com/filipeleonelbatista/filipeleonelbatista/blob/master/assets/044-instagram.svg" />
+  </a>
+</p>
+<br />
+<p align="center">
+    Desenvolvido 💜 por Filipe Batista 
+</p>
