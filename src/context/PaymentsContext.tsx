@@ -30,7 +30,7 @@ export function PaymentsContextProvider(props) {
     useState("Todos");
   const [search, setSearch] = useState("");
   const [startDate, setStartDate] = useState(dayjs().startOf("month").toDate());
-  const [endDate, setEndDate] = useState(dayjs().endOf("month").toDate());
+  const [endDate, setEndDate] = useState(dayjs().add(1, 'month').startOf('month').toDate());
 
   const favoritedFilterLabel = ["Todos", "Favoritos", "Não favoritados"];
 
