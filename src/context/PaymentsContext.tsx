@@ -287,11 +287,13 @@ export function PaymentsContextProvider(props) {
         JSON.stringify([transactionToUpdate, ...currentTransactions])
       );
     }
+
+    loadTransactions();
+
     toast({
       description: transactionToUpdate.isFavorited ? "Item favoritado" : "Item desfavoritado",
       variant: "success"
     })
-    loadTransactions();
   }
 
   async function updateTransaction(currentTransaction) {
@@ -303,11 +305,13 @@ export function PaymentsContextProvider(props) {
       "finances",
       JSON.stringify([currentTransaction, ...currentTransactions])
     );
+
+    loadTransactions();
+
     toast({
       description: "Item atualizado com sucesso!",
       variant: "success"
     })
-    loadTransactions();
   }
 
   async function deleteTransaction(currentTransaction) {
@@ -322,11 +326,12 @@ export function PaymentsContextProvider(props) {
       );
     }
 
+    loadTransactions();
+
     toast({
       description: "Item excluido com sucesso!",
       variant: "success"
     })
-    loadTransactions();
   }
 
 
@@ -336,18 +341,18 @@ export function PaymentsContextProvider(props) {
         "finances",
         JSON.stringify([])
       );
+      loadTransactions();
       toast({
         description: "Tabela apagada com sucesso!",
         variant: "success"
       })
     } else {
+      loadTransactions();
       toast({
         description: "Nada foi excluido!",
         variant: "success"
       })
     }
-
-    loadTransactions();
   }
 
   async function importTransactions(importedList) {
@@ -406,11 +411,13 @@ export function PaymentsContextProvider(props) {
       JSON.stringify([...convertedList, ...transactionsList])
     );
 
+    loadTransactions();
+
     toast({
       description: "Importação conclúida com sucesso!",
       variant: "success"
     })
-    loadTransactions();
+    
   }
 
   async function addTransaction(newTransaction) {
@@ -421,12 +428,13 @@ export function PaymentsContextProvider(props) {
       JSON.stringify([newTransaction, ...transactionsList])
     );
 
+    loadTransactions();
+    
     toast({
       description: "Item adicionado com sucesso!",
       variant: "success"
     })
 
-    loadTransactions();
   }
 
   const loadTransactions = useCallback(async () => {

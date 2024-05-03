@@ -42,12 +42,13 @@ export function RunsContextProvider(props) {
       JSON.stringify([...convertedList, ...FuelList])
     );
 
+    loadTransactions();
+    
     toast({
       description: "Importação conclúida com sucesso!",
       variant: "success"
     })
 
-    loadTransactions();
   }
 
   async function deleteTransaction(currentTransaction) {
@@ -61,12 +62,12 @@ export function RunsContextProvider(props) {
         JSON.stringify([...currentTransactions])
       );
     }
+    loadTransactions();
 
     toast({
       description: "Item excluido com sucesso!",
       variant: "success"
     })
-    loadTransactions();
   }
 
   async function deleteAllTransaction() {
@@ -75,19 +76,18 @@ export function RunsContextProvider(props) {
         "runs",
         JSON.stringify([])
       );
+      loadTransactions();
       toast({
         description: "Tabela apagada com sucesso!",
         variant: "success"
       })
     } else {
+      loadTransactions();
       toast({
         description: "Nada foi excluido!",
         variant: "success"
       })
     }
-
-
-    loadTransactions();
   }
 
   async function addTransaction(newTransaction) {
@@ -101,12 +101,13 @@ export function RunsContextProvider(props) {
 
     localStorage.setItem('runs', JSON.stringify(newTransactionList));
 
+    loadTransactions()
+
     toast({
       description: "Abastecimento adicionado com sucesso!",
       variant: "success"
     })
 
-    loadTransactions()
   }
 
   const loadTransactions = useCallback(async () => {
