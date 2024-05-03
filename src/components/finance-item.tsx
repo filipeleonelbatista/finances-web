@@ -126,6 +126,10 @@ function FinanceItem({ item, index }) {
             {"Cat.: "}
             {item.category}
           </p>
+          <p>
+            {"Obs.: "}
+            {item.about ? item.about.substr(0, 100) + "(...)": ""}
+          </p>
         </div>
         <p className="font-semibold">
           {item.isEnabled ? "-" : ""}
