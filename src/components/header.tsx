@@ -72,13 +72,13 @@ function Header({ title = "", isShort }: HeaderProps) {
                     <IoCarSportOutline />
                   </DropdownMenuShortcut>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
+                {/* <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => navigate("/investiments")}>
                   Simule investimentos
                   <DropdownMenuShortcut>
                     <LuLineChart />
                   </DropdownMenuShortcut>
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => navigate("/settings")}>
                   Configurações
