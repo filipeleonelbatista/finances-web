@@ -41,7 +41,7 @@ function Runs() {
 
   const [showFilter, setShowFilter] = useState(false);
   const [startDate, setStartDate] = useState(dayjs().startOf("month").toDate());
-  const [endDate, setEndDate] = useState(dayjs().endOf("month").toDate());
+  const [endDate, setEndDate] = useState(dayjs().add(1, 'month').startOf('month').toDate());
 
   const filteredList = useMemo(() => {
     if (FuelList) {
