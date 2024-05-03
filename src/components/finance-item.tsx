@@ -78,7 +78,7 @@ function FinanceItem({ item, index }) {
         <Dialog>
           <DialogTrigger
             className="cursor-pointer"
-            onClick={() => console.log("oi")}
+            onClick={() => {}}
           >
             <LuPen className="w-4 h-4 text-gray-600 dark:text-gray-100 transition-all duration-400 ease-in-out hover:text-gray-900" />
           </DialogTrigger>

@@ -12,7 +12,7 @@ export default defineConfig({
       registerType: 'prompt',
       injectRegister: "auto",
       workbox: {
-        globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
+        globPatterns: ["**/*.{js,css,html,ico,png,jpg,svg}"],
       },
       devOptions: {
         enabled: true
