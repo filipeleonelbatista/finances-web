@@ -23,5 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 .yarn
+.yarnrc.yml
 yarn.lock
 dev-dist
