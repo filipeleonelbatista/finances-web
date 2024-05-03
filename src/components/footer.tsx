@@ -7,13 +7,13 @@ function Footer() {
         <Ad />
       </div>
       <footer className="bottom-0 p-4 flex flex-col items-center space-y-1">
-        <p className="text-muted-foreground text-xs">Ver.: 1.4.0</p>
-        <a
+        <p className="text-muted-foreground text-xs">Ver.: 1.4.2</p>
+        {/* <a
           href="https://play.google.com/store/apps/details?id=com.finances"
           className="text-purple-600 font-semibold text-center"
         >
           Finanças - Controle seus gastos (Baixe o app Android)
-        </a>
+        </a> */}
         <p>
           Desenvolvido com ❤️ por{" "}
           <a
