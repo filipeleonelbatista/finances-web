@@ -15,6 +15,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useMemo } from "react";
 import { IoTrashOutline } from "react-icons/io5";
+import { Textarea } from "./ui/textarea";
 
 function FormEditTransaction({ selectedTransaction }) {
   const { categoriesList, updateTransaction, deleteTransaction } =
@@ -23,9 +24,10 @@ function FormEditTransaction({ selectedTransaction }) {
   const formSchema = useMemo(() => {
     return Yup.object().shape({
       description: Yup.string().required("O campo Descrição é obrigatório"),
+      about: Yup.string(),
       amount: Yup.string().required("O campo Valor é obrigatório"),
       category: Yup.string(),
-      date: Yup.string(),
+      date: Yup.string().required(),
       paymentDate: Yup.string(),
       paymentStatus: Yup.boolean(),
       isEnabled: Yup.boolean(),
@@ -35,6 +37,7 @@ function FormEditTransaction({ selectedTransaction }) {
   const formik = useFormik({
     initialValues: {
       description: selectedTransaction.description,
+      about: selectedTransaction.about,
       amount: moeda(selectedTransaction.amount.toFixed(2)),
       date: selectedTransaction.date !== "" ? selectedTransaction.date : "",
       paymentDate:
@@ -65,6 +68,7 @@ function FormEditTransaction({ selectedTransaction }) {
         formValues.paymentDate !== ""
           ? new Date(formValues.paymentDate).getTime() + 43200000
           : "",
+      about: formValues.about,
       description: formValues.description,
       category: formValues.isEnabled ? formValues.category : "Ganhos",
       paymentStatus: formValues.paymentStatus,
@@ -118,6 +122,24 @@ function FormEditTransaction({ selectedTransaction }) {
         {formik.errors.description && (
           <p className="text-sm text-red-600 dark:text-red-300">
             {formik.errors.description}
+          </p>
+        )}
+      </div>
+      <div>
+        <Label htmlFor="about">Sobre</Label>
+        <Textarea
+          id="about"
+          onChange={(event) =>
+            formik.setFieldValue("about", event.target.value)
+          }
+          value={formik.values.about}
+        />
+        <p className="text-sm text-gray-800 dark:text-gray-200">
+          Escreva alguma informação sobre este pagamento...
+        </p>
+        {formik.errors.about && (
+          <p className="text-sm text-red-600 dark:text-red-300">
+            {formik.errors.about}
           </p>
         )}
       </div>
