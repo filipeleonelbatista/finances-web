@@ -73,6 +73,7 @@ function StockItem({ item, index }) {
             <CiMoneyBill className="text-2xl" />
             <p>{formatCurrency(item.amount)}</p>
           </div>
+          <p><small>Qtd. estoque: {item.quantityDesired}</small></p>
           <div className="flex flex-row space-x-2 items-center">
             <button onClick={() => item.quantity > 0 && updateStock(item, false, true)}>
               <CiCircleMinus className="w-8 h-8 text-green-600" />
